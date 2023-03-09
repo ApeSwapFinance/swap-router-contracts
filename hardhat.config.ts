@@ -51,11 +51,29 @@ export default {
     optimism: {
       url: `https://mainnet.optimism.io`,
     },
+    polygon: {
+      url: 'https://polygon-rpc.com',
+      chainId: 137,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
+      },
+    },
+    bscTestnet: {
+      url: 'https://data-seed-prebsc-1-s3.binance.org:8545',
+      chainId: 97,
+      accounts: {
+        mnemonic: process.env.TESTNET_DEPLOYER_KEY,
+      },
+    },
   },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      bscTestnet: process.env.BSCSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+    },
   },
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
