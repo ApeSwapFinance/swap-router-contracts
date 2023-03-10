@@ -12,6 +12,7 @@ async function main() {
   const { factoryV2, factoryV3, positionManager, WNATIVE } = getNetworkConfig(hre.network.name)
   const RouteQuoter = await ethers.getContractFactory('MixedRouteQuoterV1')
   let routeQuoter = await RouteQuoter.deploy(factoryV3, factoryV2, WNATIVE)
+  await routeQuoter.deployed();
   console.log('MixedRouteQuoterV1 deployed at: ', routeQuoter.address)
   console.log('npx hardhat verify --network', hre.network.name, routeQuoter.address, factoryV3, factoryV2, WNATIVE)
 }
