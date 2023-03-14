@@ -2,17 +2,17 @@ function getNetworkConfig(network: any) {
   if (['bsc', 'bsc-fork'].includes(network)) {
     console.log(`Deploying with BSC MAINNET config.`)
     return {
-      factoryV2: '0xcF0feBd3f17CEf5b47b0cD257aCf6025c5BFf3b7',
-      factoryV3: '',
-      positionManager: '',
+      factoryV2: '0x0841BD0B734E4F5853f0dD8d7Ea041c241fb0Da6',
+      factoryV3: '0x5a6511F7CD85e5bCaad3D72B0ed22AF163363A63',
+      positionManager: '0x3f0256533a4c4670B7E4b4CBcE990d7497216489',
       WNATIVE: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     }
   } else if (['bscTestnet', 'bsc-testnet-fork'].includes(network)) {
     console.log(`Deploying with BSC testnet config.`)
     return {
       factoryV2: '0x152349604d49c2Af10ADeE94b918b051104a143E',
-      factoryV3: '0x8013540bB4a8d16f1693FFAF308c7583Cd26A6d8',
-      positionManager: '0xaC5D5019A1D9d9bbFb1bB171a2F18737FA4dC7dA',
+      factoryV3: '0x13f321ABC34b9BD13a6Db1b1CfA6bfd0f78b3909',
+      positionManager: '0x23EAe0CF648314AE40eB26e4bFfFE129bf4Cd8C8',
       WNATIVE: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
     }
   } else if (['polygon'].includes(network)) {
