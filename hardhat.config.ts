@@ -24,8 +24,12 @@ export default {
     hardhat: {
       allowUnlimitedContractSize: false,
     },
-    mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+    eth: {
+      url: 'https://endpoints.omniatech.io/v1/eth/mainnet/public',
+      chainId: 1,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
+      },
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -43,7 +47,11 @@ export default {
       url: `https://rinkeby.arbitrum.io/rpc`,
     },
     arbitrum: {
-      url: `https://arb1.arbitrum.io/rpc`,
+      url: `https://endpoints.omniatech.io/v1/arbitrum/one/public`,
+      chainId: 42161,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
+      },
     },
     optimismKovan: {
       url: `https://kovan.optimism.io`,
@@ -65,6 +73,13 @@ export default {
         mnemonic: process.env.TESTNET_DEPLOYER_KEY,
       },
     },
+    telos: {
+      url: 'https://mainnet.telos.net/evm',
+      chainId: 40,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
+      },
+    },
   },
   etherscan: {
     // Your API key for Etherscan
@@ -73,6 +88,7 @@ export default {
       mainnet: process.env.ETHERSCAN_API_KEY,
       bscTestnet: process.env.BSCSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
+      arbitrumOne: process.env.ARBISCAN_API_KEY
     },
   },
   solidity: {

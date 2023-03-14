@@ -24,6 +24,30 @@ function getNetworkConfig(network: any) {
       positionManager: '0x01B8f5B6647E57607D8d5E323EdBDb3C7Efe86b6',
       WNATIVE: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     }
+  } else if (['eth', 'ethereum'].includes(network)) {
+    console.log(`Deploying with polygon config.`)
+    return {
+      factoryV2: '0xbae5dc9b19004883d0377419fef3c2c8832d7d7b',
+      factoryV3: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+      positionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+      WNATIVE: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    }
+  } else if (['arbitrum'].includes(network)) {
+    console.log(`Deploying with polygon config.`)
+    return {
+      factoryV2: '0xCf083Be4164828f00cAE704EC15a36D711491284',
+      factoryV3: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+      positionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+      WNATIVE: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    }
+  } else if (['tlos', 'telos'].includes(network)) {
+    console.log(`Deploying with polygon config.`)
+    return {
+      factoryV2: '0x411172Dfcd5f68307656A1ff35520841C2F7fAec',
+      factoryV3: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+      positionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+      WNATIVE: '0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E',
+    }
   } else if (['development'].includes(network)) {
     console.log(`Deploying with development config.`)
     return {}
