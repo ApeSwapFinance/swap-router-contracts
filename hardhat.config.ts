@@ -25,7 +25,7 @@ export default {
       allowUnlimitedContractSize: false,
     },
     eth: {
-      url: 'https://endpoints.omniatech.io/v1/eth/mainnet/public',
+      url: 'https://eth.llamarpc.com',
       chainId: 1,
       accounts: {
         mnemonic: process.env.MAINNET_DEPLOYER_KEY,
