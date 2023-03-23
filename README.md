@@ -22,7 +22,7 @@ For example:
 import {
   abi as SWAP_ROUTER_ABI,
   bytecode as SWAP_ROUTER_BYTECODE,
-} from '@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json'
+} from '@uniswap/swap-router-contracts/artifacts/contracts/ApeSwapMultiSwapRouter.sol/ApeSwapMultiSwapRouter.json'
 
 // deploy the bytecode
 ```
@@ -37,10 +37,10 @@ The swap router contract interfaces are available for import into solidity smart
 via the npm artifact `@uniswap/swap-router-contracts`, e.g.:
 
 ```solidity
-import '@uniswap/swap-router-contracts/contracts/interfaces/ISwapRouter02.sol';
+import '@uniswap/swap-router-contracts/contracts/interfaces/IApeSwapMultiSwapRouter.sol';
 
 contract MyContract {
-  ISwapRouter02 router;
+  IApeSwapMultiSwapRouter router;
 
   function doSomethingWithSwapRouter() {
     // router.exactInput(...);

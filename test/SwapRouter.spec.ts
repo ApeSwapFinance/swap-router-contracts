@@ -4,7 +4,7 @@ import { Fixture } from 'ethereum-waffle'
 import { BigNumber, constants, Contract, ContractTransaction, Wallet } from 'ethers'
 import { solidityPack } from 'ethers/lib/utils'
 import { ethers, waffle } from 'hardhat'
-import { IUniswapV2Pair, IWETH9, MockTimeSwapRouter02, MixedRouteQuoterV1, TestERC20 } from '../typechain'
+import { IUniswapV2Pair, IWETH9, MockTimeApeSwapMultiSwapRouter, MixedRouteQuoterV1, TestERC20 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { computePoolAddress } from './shared/computePoolAddress'
 import {
@@ -30,7 +30,7 @@ describe('SwapRouter', function () {
     weth9: IWETH9
     factory: Contract
     factoryV2: Contract
-    router: MockTimeSwapRouter02
+    router: MockTimeApeSwapMultiSwapRouter
     quoter: MixedRouteQuoterV1
     nft: Contract
     tokens: [TestERC20, TestERC20, TestERC20]
@@ -62,7 +62,7 @@ describe('SwapRouter', function () {
   let factory: Contract
   let factoryV2: Contract
   let weth9: IWETH9
-  let router: MockTimeSwapRouter02
+  let router: MockTimeApeSwapMultiSwapRouter
   let quoter: MixedRouteQuoterV1
   let nft: Contract
   let tokens: [TestERC20, TestERC20, TestERC20]

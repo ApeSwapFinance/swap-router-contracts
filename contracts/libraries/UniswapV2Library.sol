@@ -2,6 +2,7 @@
 pragma solidity >=0.5.0;
 
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
+import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
 import '@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol';
 
 library UniswapV2Library {
@@ -15,24 +16,8 @@ library UniswapV2Library {
     }
 
     // calculates the CREATE2 address for a pair without making any external calls
-    function pairFor(
-        address factory,
-        address tokenA,
-        address tokenB
-    ) internal pure returns (address pair) {
-        (address token0, address token1) = sortTokens(tokenA, tokenB);
-        pair = address(
-            uint256(
-                keccak256(
-                    abi.encodePacked(
-                        hex'ff',
-                        factory,
-                        keccak256(abi.encodePacked(token0, token1)),
-                        hex'f4ccce374816856d11f00e4069e7cada164065686fbef53c6167a63ec2fd8c5b' // init code hash
-                    )
-                )
-            )
-        );
+    function pairFor(address factory, address tokenA, address tokenB) internal view returns (address pair) {
+        return IUniswapV2Factory(factory).getPair(tokenA, tokenB);
     }
 
     // fetches and sorts the reserves for a pair
@@ -44,6 +29,13 @@ library UniswapV2Library {
         (address token0, ) = sortTokens(tokenA, tokenB);
         (uint256 reserve0, uint256 reserve1, ) = IUniswapV2Pair(pairFor(factory, tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
+    }
+
+    // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
+    function quote(uint amountA, uint reserveA, uint reserveB) internal pure returns (uint amountB) {
+        require(amountA > 0, 'INSUFFICIENT_AMOUNT');
+        require(reserveA > 0 && reserveB > 0, 'INSUFFICIENT_LIQUIDITY');
+        amountB = amountA.mul(reserveB) / reserveA;
     }
 
     // given an input amount of an asset and pair reserves, returns the maximum output amount of the other asset
@@ -86,5 +78,9 @@ library UniswapV2Library {
             (uint256 reserveIn, uint256 reserveOut) = getReserves(factory, path[i - 1], path[i]);
             amounts[i - 1] = getAmountIn(amounts[i], reserveIn, reserveOut);
         }
+    }
+
+    function createPair(address factory, address tokenA, address tokenB) internal returns (address pair) {
+        return IUniswapV2Factory(factory).createPair(tokenA, tokenB);
     }
 }

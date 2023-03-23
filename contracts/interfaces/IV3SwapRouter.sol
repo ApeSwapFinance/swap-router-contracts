@@ -8,6 +8,7 @@ import '@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.so
 /// @notice Functions for swapping tokens via Uniswap V3
 interface IV3SwapRouter is IUniswapV3SwapCallback {
     struct ExactInputSingleParams {
+        address factory;
         address tokenIn;
         address tokenOut;
         uint24 fee;
@@ -25,6 +26,7 @@ interface IV3SwapRouter is IUniswapV3SwapCallback {
     function exactInputSingle(ExactInputSingleParams calldata params) external payable returns (uint256 amountOut);
 
     struct ExactInputParams {
+        address factory;
         bytes path;
         address recipient;
         uint256 amountIn;
@@ -39,6 +41,7 @@ interface IV3SwapRouter is IUniswapV3SwapCallback {
     function exactInput(ExactInputParams calldata params) external payable returns (uint256 amountOut);
 
     struct ExactOutputSingleParams {
+        address factory;
         address tokenIn;
         address tokenOut;
         uint24 fee;
@@ -55,6 +58,7 @@ interface IV3SwapRouter is IUniswapV3SwapCallback {
     function exactOutputSingle(ExactOutputSingleParams calldata params) external payable returns (uint256 amountIn);
 
     struct ExactOutputParams {
+        address factory;
         bytes path;
         address recipient;
         uint256 amountOut;

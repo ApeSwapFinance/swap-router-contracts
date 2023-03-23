@@ -14,6 +14,7 @@ interface IV2SwapRouter {
     /// @param to The recipient address
     /// @return amountOut The amount of the received token
     function swapExactTokensForTokens(
+        address factory,
         uint256 amountIn,
         uint256 amountOutMin,
         address[] calldata path,
@@ -27,9 +28,21 @@ interface IV2SwapRouter {
     /// @param to The recipient address
     /// @return amountIn The amount of token to pay
     function swapTokensForExactTokens(
+        address factory,
         uint256 amountOut,
         uint256 amountInMax,
         address[] calldata path,
         address to
     ) external payable returns (uint256 amountIn);
+
+    function addLiquidity(
+        address factory,
+        address tokenA,
+        address tokenB,
+        uint amountADesired,
+        uint amountBDesired,
+        uint amountAMin,
+        uint amountBMin,
+        address to
+    ) external returns (uint amountA, uint amountB, uint liquidity);
 }

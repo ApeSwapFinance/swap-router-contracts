@@ -2,13 +2,13 @@ import { Fixture } from 'ethereum-waffle'
 import { ethers, waffle } from 'hardhat'
 import { v3RouterFixture } from './externalFixtures'
 import { constants, Contract } from 'ethers'
-import { IWETH9, MockTimeSwapRouter02, TestERC20 } from '../../typechain'
+import { IWETH9, MockTimeApeSwapMultiSwapRouter, TestERC20 } from '../../typechain'
 
 const completeFixture: Fixture<{
   weth9: IWETH9
   factoryV2: Contract
   factory: Contract
-  router: MockTimeSwapRouter02
+  router: MockTimeApeSwapMultiSwapRouter
   nft: Contract
   tokens: [TestERC20, TestERC20, TestERC20]
 }> = async ([wallet], provider) => {

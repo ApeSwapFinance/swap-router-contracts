@@ -4,7 +4,7 @@ import { Fixture } from 'ethereum-waffle'
 import { BigNumber, constants, ContractTransaction, Wallet } from 'ethers'
 import { solidityPack } from 'ethers/lib/utils'
 import { ethers, waffle } from 'hardhat'
-import { IUniswapV3Pool, IWETH9, MockTimeSwapRouter02, TestERC20 } from '../typechain'
+import { IUniswapV3Pool, IWETH9, MockTimeApeSwapMultiSwapRouter, TestERC20 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { ADDRESS_THIS, FeeAmount, MSG_SENDER, TICK_SPACINGS } from './shared/constants'
 import { encodePriceSqrt } from './shared/encodePriceSqrt'
@@ -21,7 +21,7 @@ describe('SwapRouter gas tests', function () {
 
   const swapRouterFixture: Fixture<{
     weth9: IWETH9
-    router: MockTimeSwapRouter02
+    router: MockTimeApeSwapMultiSwapRouter
     tokens: [TestERC20, TestERC20, TestERC20]
     pools: [IUniswapV3Pool, IUniswapV3Pool, IUniswapV3Pool]
   }> = async (wallets, provider) => {
@@ -96,7 +96,7 @@ describe('SwapRouter gas tests', function () {
   }
 
   let weth9: IWETH9
-  let router: MockTimeSwapRouter02
+  let router: MockTimeApeSwapMultiSwapRouter
   let tokens: [TestERC20, TestERC20, TestERC20]
   let pools: [IUniswapV3Pool, IUniswapV3Pool, IUniswapV3Pool]
 

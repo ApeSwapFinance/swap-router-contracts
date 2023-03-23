@@ -10,18 +10,16 @@ import getNetworkConfig from '../deploy-config'
  */
 async function main() {
   console.log('START')
-  const { factoryV2, factoryV3, positionManager, WNATIVE } = getNetworkConfig(hre.network.name)
-  const Router = await ethers.getContractFactory('SwapRouter02')
-  const router = await Router.deploy(factoryV2, factoryV3, positionManager, WNATIVE)
+  const { factoryV2, factoryV3, positionManager, WNATIVE, factories } = getNetworkConfig(hre.network.name)
+  const Router = await ethers.getContractFactory('ApeSwapMultiSwapRouter')
+  const router = await Router.deploy(factories, WNATIVE)
   await router.deployed()
-  console.log('SwapRouter02 deployed at: ', router.address)
+  console.log('ApeSwapMultiSwapRouter deployed at: ', router.address)
   console.log(
     'npx hardhat verify --network',
     hre.network.name,
+    factories,
     router.address,
-    factoryV2,
-    factoryV3,
-    positionManager,
     WNATIVE
   )
 }

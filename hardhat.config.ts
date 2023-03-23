@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-waffle'
 import 'hardhat-typechain'
 import 'hardhat-watcher'
 import 'dotenv/config'
+import 'hardhat-contract-sizer'
 
 const DEFAULT_COMPILER_SETTINGS = {
   version: '0.7.6',

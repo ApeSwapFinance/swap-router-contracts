@@ -1,7 +1,7 @@
 import { Fixture } from 'ethereum-waffle'
 import { constants, Contract, ContractTransaction, Wallet } from 'ethers'
 import { waffle, ethers } from 'hardhat'
-import { IWETH9, MockTimeSwapRouter02 } from '../typechain'
+import { IWETH9, MockTimeApeSwapMultiSwapRouter } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { expect } from './shared/expect'
 
@@ -10,7 +10,7 @@ describe('PeripheryPaymentsExtended', function () {
 
   const routerFixture: Fixture<{
     weth9: IWETH9
-    router: MockTimeSwapRouter02
+    router: MockTimeApeSwapMultiSwapRouter
   }> = async (wallets, provider) => {
     const { weth9, router } = await completeFixture(wallets, provider)
 
@@ -20,7 +20,7 @@ describe('PeripheryPaymentsExtended', function () {
     }
   }
 
-  let router: MockTimeSwapRouter02
+  let router: MockTimeApeSwapMultiSwapRouter
   let weth9: IWETH9
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>

@@ -2,9 +2,9 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '../SwapRouter02.sol';
+import '../ApeSwapMultiSwapRouter.sol';
 
-contract MockTimeSwapRouter02 is SwapRouter02 {
+contract MockTimeApeSwapMultiSwapRouter is ApeSwapMultiSwapRouter {
     uint256 time;
 
     constructor(
@@ -12,7 +12,7 @@ contract MockTimeSwapRouter02 is SwapRouter02 {
         address factoryV3,
         address _positionManager,
         address _WETH9
-    ) SwapRouter02(_factoryV2, factoryV3, _positionManager, _WETH9) {}
+    ) ApeSwapMultiSwapRouter(new address[](0), _WETH9) {}
 
     function _blockTimestamp() internal view override returns (uint256) {
         return time;
