@@ -11,7 +11,7 @@ abstract contract FactoryWhitelist is IFactoryWhitelist, Ownable {
     event FactoryRemoved(address router);
     mapping(address => bool) public factories;
 
-    modifier factoryWhitelisted(address factory) {
+    modifier dexWhitelisted(address factory) {
         require(factories[factory], 'Factory not whitelisted');
         _;
     }

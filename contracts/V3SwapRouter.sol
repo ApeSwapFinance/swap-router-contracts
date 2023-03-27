@@ -48,7 +48,7 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata _data
-    ) external override factoryWhitelisted(IUniswapV3Pool(msg.sender).factory()) {
+    ) external override dexWhitelisted(IUniswapV3Pool(msg.sender).factory()) {
         require(amount0Delta > 0 || amount1Delta > 0); // swaps entirely within 0-liquidity regions are not supported
         SwapCallbackData memory data = abi.decode(_data, (SwapCallbackData));
         (address tokenIn, address tokenOut, uint24 fee) = data.path.decodeFirstPool();
@@ -104,7 +104,7 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
     /// @inheritdoc IV3SwapRouter
     function exactInputSingle(
         ExactInputSingleParams memory params
-    ) external payable override factoryWhitelisted(params.factory) returns (uint256 amountOut) {
+    ) external payable override dexWhitelisted(params.factory) returns (uint256 amountOut) {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         bool hasAlreadyPaid;
         if (params.amountIn == Constants.CONTRACT_BALANCE) {
@@ -128,7 +128,7 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
     /// @inheritdoc IV3SwapRouter
     function exactInput(
         ExactInputParams memory params
-    ) external payable override factoryWhitelisted(params.factory) returns (uint256 amountOut) {
+    ) external payable override dexWhitelisted(params.factory) returns (uint256 amountOut) {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         bool hasAlreadyPaid;
         if (params.amountIn == Constants.CONTRACT_BALANCE) {
@@ -205,7 +205,7 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
     /// @inheritdoc IV3SwapRouter
     function exactOutputSingle(
         ExactOutputSingleParams calldata params
-    ) external payable override factoryWhitelisted(params.factory) returns (uint256 amountIn) {
+    ) external payable override dexWhitelisted(params.factory) returns (uint256 amountIn) {
         // avoid an SLOAD by using the swap return data
         amountIn = exactOutputInternal(
             params.factory,
@@ -223,7 +223,7 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
     /// @inheritdoc IV3SwapRouter
     function exactOutput(
         ExactOutputParams calldata params
-    ) external payable override factoryWhitelisted(params.factory) returns (uint256 amountIn) {
+    ) external payable override dexWhitelisted(params.factory) returns (uint256 amountIn) {
         exactOutputInternal(
             params.factory,
             params.amountOut,

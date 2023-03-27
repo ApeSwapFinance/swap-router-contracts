@@ -2,6 +2,8 @@
 pragma solidity >=0.7.5;
 pragma abicoder v2;
 
+import './IApeRouter02.sol';
+
 /// @title Router token swapping functionality
 /// @notice Functions for swapping tokens via Uniswap V2
 interface IV2SwapRouter {
@@ -14,7 +16,7 @@ interface IV2SwapRouter {
     /// @param to The recipient address
     /// @return amountOut The amount of the received token
     function swapExactTokensForTokens(
-        address factory,
+        IApeRouter02 router,
         uint256 amountIn,
         uint256 amountOutMin,
         address[] calldata path,
@@ -28,7 +30,7 @@ interface IV2SwapRouter {
     /// @param to The recipient address
     /// @return amountIn The amount of token to pay
     function swapTokensForExactTokens(
-        address factory,
+        IApeRouter02 router,
         uint256 amountOut,
         uint256 amountInMax,
         address[] calldata path,
@@ -36,13 +38,19 @@ interface IV2SwapRouter {
     ) external payable returns (uint256 amountIn);
 
     function addLiquidity(
-        address factory,
+        IApeRouter02 router,
         address tokenA,
         address tokenB,
-        uint amountADesired,
-        uint amountBDesired,
-        uint amountAMin,
-        uint amountBMin,
+        uint256 amountADesired,
+        uint256 amountBDesired,
+        uint256 amountAMin,
+        uint256 amountBMin,
         address to
-    ) external returns (uint amountA, uint amountB, uint liquidity);
+    )
+        external
+        returns (
+            uint256 amountA,
+            uint256 amountB,
+            uint256 liquidity
+        );
 }
