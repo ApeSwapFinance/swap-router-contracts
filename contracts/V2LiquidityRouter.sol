@@ -3,18 +3,18 @@ pragma solidity =0.7.6;
 pragma abicoder v2;
 
 import '@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol';
-import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
-import './interfaces/IV2Liquidity.sol';
+import './interfaces/IV2LiquidityRouter.sol';
 import './interfaces/IApeFactory.sol';
+import './interfaces/IApePair.sol';
 import './base/PeripheryPaymentsWithFeeExtended.sol';
-import './base/FactoryWhitelist.sol';
+import './base/ContractWhitelist.sol';
 import './libraries/Constants.sol';
 
 /// @title Uniswap V2 Swap Router
 /// @notice Router for stateless execution of swaps against Uniswap V2
-abstract contract V2Liquidity is IV2Liquidity, PeripheryPaymentsWithFeeExtended, FactoryWhitelist {
+abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWithFeeExtended, ContractWhitelist {
     using LowGasSafeMath for uint256;
 
     function _addLiquidity(
@@ -31,7 +31,7 @@ abstract contract V2Liquidity is IV2Liquidity, PeripheryPaymentsWithFeeExtended,
             IApeFactory(router.factory()).createPair(tokenA, tokenB);
         }
         (uint256 reserveA, uint256 reserveB, ) =
-            IUniswapV2Pair(IApeFactory(router.factory()).getPair(tokenA, tokenB)).getReserves();
+            IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA < tokenB ? (reserveA, reserveB) : (reserveB, reserveA);
 
         if (reserveA == 0 && reserveB == 0) {
@@ -63,7 +63,7 @@ abstract contract V2Liquidity is IV2Liquidity, PeripheryPaymentsWithFeeExtended,
         external
         virtual
         override
-        dexWhitelisted(address(router))
+        contractWhitelisted(address(router))
         returns (
             uint256 amountA,
             uint256 amountB,
@@ -87,6 +87,6 @@ abstract contract V2Liquidity is IV2Liquidity, PeripheryPaymentsWithFeeExtended,
         if (to == Constants.MSG_SENDER) to = msg.sender;
         else if (to == Constants.ADDRESS_THIS) to = address(this);
 
-        liquidity = IUniswapV2Pair(pair).mint(to);
+        liquidity = IApePair(pair).mint(to);
     }
 }

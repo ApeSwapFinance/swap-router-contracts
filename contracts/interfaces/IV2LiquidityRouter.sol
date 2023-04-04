@@ -6,7 +6,7 @@ import './IApeRouter02.sol';
 
 /// @title Router token swapping functionality
 /// @notice Functions for swapping tokens via Uniswap V2
-interface IV2Liquidity {
+interface IV2LiquidityRouter {
     function addLiquidity(
         IApeRouter02 router,
         address tokenA,

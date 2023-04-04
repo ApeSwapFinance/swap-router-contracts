@@ -3,18 +3,18 @@ pragma solidity =0.7.6;
 pragma abicoder v2;
 
 import '@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol';
-import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 import './interfaces/IV2SwapRouter.sol';
 import './interfaces/IApeFactory.sol';
+import './interfaces/IApePair.sol';
 import './base/PeripheryPaymentsWithFeeExtended.sol';
-import './base/FactoryWhitelist.sol';
+import './base/ContractWhitelist.sol';
 import './libraries/Constants.sol';
 
 /// @title Uniswap V2 Swap Router
 /// @notice Router for stateless execution of swaps against Uniswap V2
-abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtended, FactoryWhitelist {
+abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtended, ContractWhitelist {
     using LowGasSafeMath for uint256;
 
     // supports fee-on-transfer tokens
@@ -27,7 +27,7 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             (address token0, ) = input < output ? (input, output) : (output, input);
-            IUniswapV2Pair pair = IUniswapV2Pair(IApeFactory(router.factory()).getPair(input, output));
+            IApePair pair = IApePair(IApeFactory(router.factory()).getPair(input, output));
             uint256 amountInput;
             uint256 amountOutput;
             // scope to avoid stack too deep errors
@@ -52,7 +52,7 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         uint256 amountOutMin,
         address[] calldata path,
         address to
-    ) external payable override dexWhitelisted(address(router)) returns (uint256 amountOut) {
+    ) external payable override contractWhitelisted(address(router)) returns (uint256 amountOut) {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         bool hasAlreadyPaid;
         if (amountIn == Constants.CONTRACT_BALANCE) {
@@ -86,7 +86,7 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         uint256 amountInMax,
         address[] calldata path,
         address to
-    ) external payable override dexWhitelisted(address(router)) returns (uint256 amountIn) {
+    ) external payable override contractWhitelisted(address(router)) returns (uint256 amountIn) {
         amountIn = router.getAmountsIn(amountOut, path)[0];
         require(amountIn <= amountInMax, 'Too much requested');
 
