@@ -183,30 +183,6 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         amountOut = getPairAmountOut(router, params.amountIn, params.tokenIn, params.tokenOut);
     }
 
-    // function quoteExactInputView(
-    //     bytes[] memory path,
-    //     address[] memory factoryOrRouter,
-    //     uint256 amountIn
-    // )
-    //     public
-    //     view
-    //     returns (
-    //         uint256 amountOut,
-    //         uint160[] memory v3SqrtPriceX96AfterList,
-    //         uint32[] memory v3InitializedTicksCrossedList,
-    //         uint256 v3SwapGasEstimate
-    //     )
-    // {
-    //     (bool success, bytes memory data) =
-    //         address(this).staticcall(
-    //             abi.encodeWithSignature('quoteExactInput(bytes[],address[],uint256)', path, factoryOrRouter, amountIn)
-    //         );
-    //     (amountOut, v3SqrtPriceX96AfterList, v3InitializedTicksCrossedList, v3SwapGasEstimate) = abi.decode(
-    //         data,
-    //         (uint256, uint160[], uint32[], uint256)
-    //     );
-    // }
-
     /// @dev Get the quote for an exactIn swap between an array of V2 and/or V3 pools
     /// @notice To encode a V2 pair within the path, use 0x800000 (hex value of 8388608) for the fee between the two token addresses
     function quoteExactInput(
