@@ -4,5 +4,5 @@ pragma solidity =0.7.6;
 /// @title ContractWhitelist
 /// @notice Whitelisting of factories
 interface IContractWhitelist {
-    function whitelistContract(address[] memory _factories, bool _whitelist) external;
+    function whitelistContracts(address[] memory _factories, bool _whitelist) external;
 }
