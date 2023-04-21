@@ -73,6 +73,13 @@ export default {
         mnemonic: process.env.TESTNET_DEPLOYER_KEY,
       },
     },
+    telos: {
+      url: 'https://mainnet.telos.net/evm',
+      chainId: 40,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
+      },
+    },
   },
   etherscan: {
     // Your API key for Etherscan

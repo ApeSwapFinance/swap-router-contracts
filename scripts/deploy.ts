@@ -15,13 +15,7 @@ async function main() {
   const router = await Router.deploy(factories, WNATIVE)
   await router.deployed()
   console.log('ApeSwapMultiSwapRouter deployed at: ', router.address)
-  console.log(
-    'npx hardhat verify --network',
-    hre.network.name,
-    factories,
-    router.address,
-    WNATIVE
-  )
+  console.log('npx hardhat verify --network', hre.network.name, router.address, factories, WNATIVE)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
