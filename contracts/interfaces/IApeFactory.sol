@@ -2,7 +2,7 @@
 pragma solidity >=0.6.6;
 
 interface IApeFactory {
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+    event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
     function INIT_CODE_PAIR_HASH() external view returns (bytes32);
 
@@ -12,9 +12,9 @@ interface IApeFactory {
 
     function getPair(address token0, address token1) external view returns (address pair);
 
-    function allPairs(uint) external view returns (address pair);
+    function allPairs(uint256) external view returns (address pair);
 
-    function allPairsLength() external view returns (uint);
+    function allPairsLength() external view returns (uint256);
 
     function createPair(address token0, address token1) external returns (address pair);
 

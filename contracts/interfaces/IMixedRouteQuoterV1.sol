@@ -38,7 +38,7 @@ interface IMixedRouteQuoterV1 {
         uint24 fee;
         uint160 sqrtPriceLimitX96;
     }
-    
+
     struct QuoteExactInputSingleV2Params {
         address tokenIn;
         address tokenOut;
