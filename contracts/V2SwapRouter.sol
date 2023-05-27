@@ -10,7 +10,7 @@ import './interfaces/IApeFactory.sol';
 import './interfaces/IApePair.sol';
 import './base/PeripheryPaymentsWithFeeExtended.sol';
 import './base/ContractWhitelist.sol';
-import './libraries/Constants.sol';
+import './libraries/ConstantValues.sol';
 
 /// @title Uniswap V2 Swap Router
 /// @notice Router for stateless execution of swaps against Uniswap V2
@@ -33,13 +33,15 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
             // scope to avoid stack too deep errors
             {
                 (uint256 reserve0, uint256 reserve1, ) = pair.getReserves();
-                (uint256 reserveInput, uint256 reserveOutput) =
-                    input == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
+                (uint256 reserveInput, uint256 reserveOutput) = input == token0
+                    ? (reserve0, reserve1)
+                    : (reserve1, reserve0);
                 amountInput = IERC20(input).balanceOf(address(pair)).sub(reserveInput);
                 amountOutput = router.getAmountOut(amountInput, reserveInput, reserveOutput);
             }
-            (uint256 amount0Out, uint256 amount1Out) =
-                input == token0 ? (uint256(0), amountOutput) : (amountOutput, uint256(0));
+            (uint256 amount0Out, uint256 amount1Out) = input == token0
+                ? (uint256(0), amountOutput)
+                : (amountOutput, uint256(0));
             address to = i < path.length - 2 ? IApeFactory(router.factory()).getPair(output, path[i + 2]) : _to;
             pair.swap(amount0Out, amount1Out, to, new bytes(0));
         }
@@ -53,9 +55,9 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         address[] calldata path,
         address to
     ) external payable override contractWhitelisted(address(router)) returns (uint256 amountOut) {
-        // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
+        // use amountIn == ConstantValues.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         bool hasAlreadyPaid;
-        if (amountIn == Constants.CONTRACT_BALANCE) {
+        if (amountIn == ConstantValues.CONTRACT_BALANCE) {
             hasAlreadyPaid = true;
             amountIn = IERC20(path[0]).balanceOf(address(this));
         }
@@ -68,8 +70,8 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         );
 
         // find and replace to addresses
-        if (to == Constants.MSG_SENDER) to = msg.sender;
-        else if (to == Constants.ADDRESS_THIS) to = address(this);
+        if (to == ConstantValues.MSG_SENDER) to = msg.sender;
+        else if (to == ConstantValues.ADDRESS_THIS) to = address(this);
 
         uint256 balanceBefore = IERC20(path[path.length - 1]).balanceOf(to);
 
@@ -93,8 +95,8 @@ abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtende
         pay(path[0], msg.sender, IApeFactory(router.factory()).getPair(path[0], path[1]), amountIn);
 
         // find and replace to addresses
-        if (to == Constants.MSG_SENDER) to = msg.sender;
-        else if (to == Constants.ADDRESS_THIS) to = address(this);
+        if (to == ConstantValues.MSG_SENDER) to = msg.sender;
+        else if (to == ConstantValues.ADDRESS_THIS) to = address(this);
 
         _swap(router, path, to);
     }

@@ -51,6 +51,11 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@cryptoalgebra/core@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@cryptoalgebra/core/-/core-2.0.0.tgz#b6d4b1ee6567d163ed2953c73724f105d1529149"
+  integrity sha512-0IYRzqxtMpA2ZuxRCe6r/gK+3I94AQ8Sg/57QtFGkTCls4JewtMW4HlnIIgz1xRvjb5mUWVK+hHG/vXMdcz8gw==
+
 "@ensdomains/ens@^0.4.4":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@ensdomains/ens/-/ens-0.4.5.tgz#e0aebc005afdc066447c6e22feb4eda89a5edbfc"

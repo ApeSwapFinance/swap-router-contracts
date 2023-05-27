@@ -12,6 +12,12 @@ function getNetworkConfig(network: any) {
         '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7', //UNIV3
         '0x10ED43C718714eb63d5aA57B78B54704E256024E', //PCS V2
       ],
+      hashes: [
+        '0xf4ccce374816856d11f00e4069e7cada164065686fbef53c6167a63ec2fd8c5b',
+        '0x3d5dcdd0a5890dbad55ff9543ece732377aa023ae7180e3ffc94f63eaf1a4ad1',
+        '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54',
+        '0x00fb7f630766e6a796048ea87d01acd3068e8ff67d078148a3fa3f4a84f69bd5',
+      ],
     }
   } else if (['bscTestnet', 'bsc-testnet-fork'].includes(network)) {
     console.log(`Deploying with BSC testnet config.`)
@@ -21,6 +27,7 @@ function getNetworkConfig(network: any) {
       positionManager: '0x23EAe0CF648314AE40eB26e4bFfFE129bf4Cd8C8',
       WNATIVE: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       factories: [],
+      hashes: [],
     }
   } else if (['polygon'].includes(network)) {
     console.log(`Deploying with polygon config.`)
@@ -34,6 +41,14 @@ function getNetworkConfig(network: any) {
         '0x7Bc382DdC5928964D7af60e7e2f6299A1eA6F48d', //APEV3
         '0x1F98431c8aD98523631AE4a59f267346ea31F984', //UNIV3
         '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff', //QUICKSWAP V2
+        '0x411b0fAcC3489691f28ad58c47006AF5E3Ab3A28', //ALGEBRA
+      ],
+      hashes: [
+        '0x511f0f358fe530cda0859ec20becf391718fdf5a329be02f4c95361f3d6a42d8',
+        '0x3d5dcdd0a5890dbad55ff9543ece732377aa023ae7180e3ffc94f63eaf1a4ad1',
+        '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54',
+        '0x0000000000000000000000000000000000000000000000000000000000000001',
+        '0x6ec6c9c8091d160c0aa74b2b14ba9c1717e95093bd3ac085cee99a49aab294a4',
       ],
       // factoryV2: '0xCf083Be4164828f00cAE704EC15a36D711491284',
       // factoryV3: '0x7Bc382DdC5928964D7af60e7e2f6299A1eA6F48d',

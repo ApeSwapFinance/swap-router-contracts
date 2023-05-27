@@ -10,7 +10,7 @@ import './interfaces/IApeFactory.sol';
 import './interfaces/IApePair.sol';
 import './base/PeripheryPaymentsWithFeeExtended.sol';
 import './base/ContractWhitelist.sol';
-import './libraries/Constants.sol';
+import './libraries/ConstantValues.sol';
 
 /// @title Uniswap V2 Swap Router
 /// @notice Router for stateless execution of swaps against Uniswap V2
@@ -30,8 +30,8 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
         if (IApeFactory(router.factory()).getPair(tokenA, tokenB) == address(0)) {
             IApeFactory(router.factory()).createPair(tokenA, tokenB);
         }
-        (uint256 reserveA, uint256 reserveB, ) =
-            IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB)).getReserves();
+        (uint256 reserveA, uint256 reserveB, ) = IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB))
+            .getReserves();
         (reserveA, reserveB) = tokenA < tokenB ? (reserveA, reserveB) : (reserveB, reserveA);
 
         if (reserveA == 0 && reserveB == 0) {
@@ -84,8 +84,8 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
         pay(tokenB, msg.sender, pair, amountB);
 
         // find and replace to addresses
-        if (to == Constants.MSG_SENDER) to = msg.sender;
-        else if (to == Constants.ADDRESS_THIS) to = address(this);
+        if (to == ConstantValues.MSG_SENDER) to = msg.sender;
+        else if (to == ConstantValues.ADDRESS_THIS) to = address(this);
 
         liquidity = IApePair(pair).mint(to);
     }

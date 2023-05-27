@@ -7,26 +7,30 @@ import '../interfaces/IContractWhitelist.sol';
 /// @title ContractWhitelist
 /// @notice Whitelisting of contracts
 abstract contract ContractWhitelist is IContractWhitelist, Ownable {
-    event ContractsWhitelistChanged(address[] factory, bool whitelist);
-    mapping(address => bool) public contracts;
+    event ContractsWhitelistChanged(address[] _contract, bytes32[] _init_code_hashes);
+    mapping(address => bytes32) public hashes;
 
     modifier contractWhitelisted(address contractAddress) {
-        require(contracts[contractAddress], 'Contract not whitelisted');
+        require(hashes[contractAddress] != bytes32(0), 'Contract not whitelisted');
         _;
     }
 
-    constructor(address[] memory _contracts) Ownable() {
-        _whitelistContracts(_contracts, true);
+    constructor(address[] memory _contracts, bytes32[] memory _init_code_hashes) Ownable() {
+        _whitelistContracts(_contracts, _init_code_hashes);
     }
 
-    function whitelistContracts(address[] memory _contracts, bool _whitelist) external override onlyOwner {
-        _whitelistContracts(_contracts, _whitelist);
+    function whitelistContracts(address[] memory _contracts, bytes32[] memory _init_code_hashes)
+        external
+        override
+        onlyOwner
+    {
+        _whitelistContracts(_contracts, _init_code_hashes);
     }
 
-    function _whitelistContracts(address[] memory _contracts, bool _whitelist) private {
+    function _whitelistContracts(address[] memory _contracts, bytes32[] memory _init_code_hashes) private {
         for (uint256 i = 0; i < _contracts.length; i++) {
-            contracts[_contracts[i]] = _whitelist;
+            hashes[_contracts[i]] = _init_code_hashes[i];
         }
-        emit ContractsWhitelistChanged(_contracts, _whitelist);
+        emit ContractsWhitelistChanged(_contracts, _init_code_hashes);
     }
 }

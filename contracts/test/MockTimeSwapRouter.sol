@@ -12,7 +12,7 @@ contract MockTimeApeSwapMultiSwapRouter is ApeSwapMultiSwapRouter {
         address factoryV3,
         address _positionManager,
         address _WETH9
-    ) ApeSwapMultiSwapRouter(new address[](0), _WETH9) {}
+    ) ApeSwapMultiSwapRouter(new address[](0), new bytes32[](0), _WETH9) {}
 
     function _blockTimestamp() internal view override returns (uint256) {
         return time;
