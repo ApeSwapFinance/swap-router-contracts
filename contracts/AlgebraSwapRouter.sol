@@ -61,9 +61,10 @@ abstract contract AlgebraSwapRouter is
         (address tokenIn, address tokenOut) = data.path.decodeFirstPool();
         CallbackValidation.verifyCallback(IAlgebraPool(msg.sender).factory(), tokenIn, tokenOut);
 
-        (bool isExactInput, uint256 amountToPay) = amount0Delta > 0
-            ? (tokenIn < tokenOut, uint256(amount0Delta))
-            : (tokenOut < tokenIn, uint256(amount1Delta));
+        (bool isExactInput, uint256 amountToPay) =
+            amount0Delta > 0
+                ? (tokenIn < tokenOut, uint256(amount0Delta))
+                : (tokenOut < tokenIn, uint256(amount1Delta));
         if (isExactInput) {
             pay(tokenIn, data.payer, msg.sender, amountToPay);
         } else {
@@ -95,15 +96,16 @@ abstract contract AlgebraSwapRouter is
 
         bool zeroToOne = tokenIn < tokenOut;
 
-        (int256 amount0, int256 amount1) = getPool(factory, tokenIn, tokenOut).swap(
-            recipient,
-            zeroToOne,
-            amountIn.toInt256(),
-            limitSqrtPrice == 0
-                ? (zeroToOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1)
-                : limitSqrtPrice,
-            abi.encode(data)
-        );
+        (int256 amount0, int256 amount1) =
+            getPool(factory, tokenIn, tokenOut).swap(
+                recipient,
+                zeroToOne,
+                amountIn.toInt256(),
+                limitSqrtPrice == 0
+                    ? (zeroToOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1)
+                    : limitSqrtPrice,
+                abi.encode(data)
+            );
 
         return uint256(-(zeroToOne ? amount1 : amount0));
     }
@@ -189,10 +191,8 @@ abstract contract AlgebraSwapRouter is
         checkDeadline(params.deadline)
         returns (uint256 amountOut)
     {
-        SwapCallbackDataAlgebra memory data = SwapCallbackDataAlgebra({
-            path: abi.encodePacked(params.tokenIn, params.tokenOut),
-            payer: msg.sender
-        });
+        SwapCallbackDataAlgebra memory data =
+            SwapCallbackDataAlgebra({path: abi.encodePacked(params.tokenIn, params.tokenOut), payer: msg.sender});
 
         // find and replace recipient addresses
         if (params.recipient == ConstantValues.MSG_SENDER) params.recipient = msg.sender;
@@ -200,8 +200,8 @@ abstract contract AlgebraSwapRouter is
 
         bool zeroToOne = params.tokenIn < params.tokenOut;
 
-        (int256 amount0, int256 amount1) = getPool(params.factory, params.tokenIn, params.tokenOut)
-            .swapSupportingFeeOnInputTokens(
+        (int256 amount0, int256 amount1) =
+            getPool(params.factory, params.tokenIn, params.tokenOut).swapSupportingFeeOnInputTokens(
                 msg.sender,
                 params.recipient,
                 zeroToOne,
@@ -233,15 +233,16 @@ abstract contract AlgebraSwapRouter is
 
         bool zeroToOne = tokenIn < tokenOut;
 
-        (int256 amount0Delta, int256 amount1Delta) = getPool(factory, tokenIn, tokenOut).swap(
-            recipient,
-            zeroToOne,
-            -amountOut.toInt256(),
-            limitSqrtPrice == 0
-                ? (zeroToOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1)
-                : limitSqrtPrice,
-            abi.encode(data)
-        );
+        (int256 amount0Delta, int256 amount1Delta) =
+            getPool(factory, tokenIn, tokenOut).swap(
+                recipient,
+                zeroToOne,
+                -amountOut.toInt256(),
+                limitSqrtPrice == 0
+                    ? (zeroToOne ? TickMath.MIN_SQRT_RATIO + 1 : TickMath.MAX_SQRT_RATIO - 1)
+                    : limitSqrtPrice,
+                abi.encode(data)
+            );
 
         uint256 amountOutReceived;
         (amountIn, amountOutReceived) = zeroToOne

@@ -30,8 +30,8 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
         if (IApeFactory(router.factory()).getPair(tokenA, tokenB) == address(0)) {
             IApeFactory(router.factory()).createPair(tokenA, tokenB);
         }
-        (uint256 reserveA, uint256 reserveB, ) = IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB))
-            .getReserves();
+        (uint256 reserveA, uint256 reserveB, ) =
+            IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA < tokenB ? (reserveA, reserveB) : (reserveB, reserveA);
 
         if (reserveA == 0 && reserveB == 0) {
