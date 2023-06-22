@@ -48,16 +48,34 @@ abstract contract V3SwapRouter is
         address payer;
     }
 
+    function pancakeV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata _data
+    ) external {
+        callback(amount0Delta, amount1Delta, _data, true);
+    }
+
     /// @inheritdoc IUniswapV3SwapCallback
     function uniswapV3SwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata _data
-    ) external override contractWhitelisted(IUniswapV3Pool(msg.sender).factory()) {
+    ) external override {
+        callback(amount0Delta, amount1Delta, _data, false);
+    }
+
+    function callback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata _data,
+        bool diffDeployer
+    ) private contractWhitelisted(IUniswapV3Pool(msg.sender).factory()) {
         require(amount0Delta > 0 || amount1Delta > 0); // swaps entirely within 0-liquidity regions are not supported
         SwapCallbackData memory data = abi.decode(_data, (SwapCallbackData));
         (address tokenIn, address tokenOut, uint24 fee) = data.path.decodeFirstPool();
-        CallbackValidation.verifyCallback(IUniswapV3Pool(msg.sender).factory(), tokenIn, tokenOut, fee);
+        address v3Factory = IUniswapV3Pool(msg.sender).factory();
+        CallbackValidation.verifyCallback(v3Factory, tokenIn, tokenOut, fee, diffDeployer);
 
         (bool isExactInput, uint256 amountToPay) =
             amount0Delta > 0
@@ -70,7 +88,7 @@ abstract contract V3SwapRouter is
             // either initiate the next swap or pay
             if (data.path.hasMultiplePools()) {
                 data.path = data.path.skipToken();
-                exactOutputInternal(IUniswapV3Pool(msg.sender).factory(), amountToPay, msg.sender, 0, data);
+                exactOutputInternal(v3Factory, amountToPay, msg.sender, 0, data);
             } else {
                 amountInCached = amountToPay;
                 // note that because exact output swaps are executed in reverse order, tokenOut is actually tokenIn

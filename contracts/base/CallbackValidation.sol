@@ -100,17 +100,22 @@ abstract contract CallbackValidation is ContractWhitelist {
         address factory,
         address tokenA,
         address tokenB,
-        uint24 fee
+        uint24 fee,
+        bool diffDeployer
     ) internal view returns (IUniswapV3Pool pool) {
-        return verifyCallback(factory, getPoolKey(tokenA, tokenB, fee));
+        return verifyCallback(factory, getPoolKey(tokenA, tokenB, fee), diffDeployer);
     }
 
     /// @notice Returns the address of a valid Uniswap V3 Pool
     /// @param factory The contract address of the Uniswap V3 factory
     /// @param poolKey The identifying key of the V3 pool
     /// @return pool The V3 pool contract address
-    function verifyCallback(address factory, PoolKey memory poolKey) internal view returns (IUniswapV3Pool pool) {
-        pool = IUniswapV3Pool(computeAddress(factory, poolKey));
+    function verifyCallback(
+        address factory,
+        PoolKey memory poolKey,
+        bool diffDeployer
+    ) internal view returns (IUniswapV3Pool pool) {
+        pool = IUniswapV3Pool(computeAddress(factory, poolKey, diffDeployer));
         require(msg.sender == address(pool));
     }
 
@@ -118,14 +123,18 @@ abstract contract CallbackValidation is ContractWhitelist {
     /// @param factory The Uniswap V3 factory contract address
     /// @param key The PoolKey
     /// @return pool The contract address of the V3 pool
-    function computeAddress(address factory, PoolKey memory key) internal view returns (address pool) {
+    function computeAddress(
+        address factory,
+        PoolKey memory key,
+        bool diffDeployer
+    ) internal view returns (address pool) {
         require(key.token0 < key.token1);
         pool = address(
             uint256(
                 keccak256(
                     abi.encodePacked(
                         hex'ff',
-                        factory,
+                        diffDeployer ? IAlgebraFactory(factory).poolDeployer() : factory,
                         keccak256(abi.encode(key.token0, key.token1, key.fee)),
                         hashes[factory]
                     )
