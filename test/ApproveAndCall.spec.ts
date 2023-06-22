@@ -3,7 +3,7 @@ import { Fixture } from 'ethereum-waffle'
 import { constants, Contract, ContractTransaction, Wallet } from 'ethers'
 import { solidityPack } from 'ethers/lib/utils'
 import { ethers, waffle } from 'hardhat'
-import { MockTimeSwapRouter02, TestERC20 } from '../typechain'
+import { MockTimeApeSwapMultiSwapRouter, TestERC20 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { ADDRESS_THIS, FeeAmount, TICK_SPACINGS } from './shared/constants'
 import { encodePriceSqrt } from './shared/encodePriceSqrt'
@@ -26,7 +26,7 @@ describe('ApproveAndCall', function () {
 
   const swapRouterFixture: Fixture<{
     factory: Contract
-    router: MockTimeSwapRouter02
+    router: MockTimeApeSwapMultiSwapRouter
     nft: Contract
     tokens: [TestERC20, TestERC20, TestERC20]
   }> = async (wallets, provider) => {
@@ -46,7 +46,7 @@ describe('ApproveAndCall', function () {
   }
 
   let factory: Contract
-  let router: MockTimeSwapRouter02
+  let router: MockTimeApeSwapMultiSwapRouter
   let nft: Contract
   let tokens: [TestERC20, TestERC20, TestERC20]
 

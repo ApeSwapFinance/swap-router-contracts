@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-waffle'
 import 'hardhat-typechain'
 import 'hardhat-watcher'
 import 'dotenv/config'
+import 'hardhat-contract-sizer'
 
 const DEFAULT_COMPILER_SETTINGS = {
   version: '0.7.6',
@@ -11,7 +12,7 @@ const DEFAULT_COMPILER_SETTINGS = {
     evmVersion: 'istanbul',
     optimizer: {
       enabled: true,
-      runs: 1_000_000,
+      runs: 700,
     },
     metadata: {
       bytecodeHash: 'none',
@@ -70,6 +71,13 @@ export default {
       chainId: 97,
       accounts: {
         mnemonic: process.env.TESTNET_DEPLOYER_KEY,
+      },
+    },
+    telos: {
+      url: 'https://mainnet.telos.net/evm',
+      chainId: 40,
+      accounts: {
+        mnemonic: process.env.MAINNET_DEPLOYER_KEY,
       },
     },
   },

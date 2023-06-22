@@ -3,7 +3,7 @@ pragma solidity =0.7.6;
 
 /// @title Constant state
 /// @notice Constant state used by the swap router
-library Constants {
+library ConstantValues {
     /// @dev Used for identifying cases when this contract's balance of a token is to be used
     uint256 internal constant CONTRACT_BALANCE = 0;
 
