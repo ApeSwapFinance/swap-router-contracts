@@ -2,7 +2,6 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 import './interfaces/IV2LiquidityRouter.sol';
@@ -12,8 +11,8 @@ import './base/PeripheryPaymentsWithFeeExtended.sol';
 import './base/ContractWhitelist.sol';
 import './libraries/ConstantValues.sol';
 
-/// @title Uniswap V2 Swap Router
-/// @notice Router for stateless execution of swaps against Uniswap V2
+/// @title V2 liquidity router
+/// @notice Router for adding V2 liquidity
 abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWithFeeExtended, ContractWhitelist {
     using LowGasSafeMath for uint256;
 
@@ -30,8 +29,8 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
         if (IApeFactory(router.factory()).getPair(tokenA, tokenB) == address(0)) {
             IApeFactory(router.factory()).createPair(tokenA, tokenB);
         }
-        (uint256 reserveA, uint256 reserveB, ) =
-            IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB)).getReserves();
+        (uint256 reserveA, uint256 reserveB, ) = IApePair(IApeFactory(router.factory()).getPair(tokenA, tokenB))
+            .getReserves();
         (reserveA, reserveB) = tokenA < tokenB ? (reserveA, reserveB) : (reserveB, reserveA);
 
         if (reserveA == 0 && reserveB == 0) {
@@ -70,6 +69,10 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
             uint256 liquidity
         )
     {
+        require(
+            to != address(0) && to != address(this) && to != ConstantValues.ADDRESS_THIS,
+            "to address can't be address(0) or address(this)"
+        );
         (amountA, amountB) = _addLiquidity(
             router,
             tokenA,
@@ -85,7 +88,6 @@ abstract contract V2LiquidityRouter is IV2LiquidityRouter, PeripheryPaymentsWith
 
         // find and replace to addresses
         if (to == ConstantValues.MSG_SENDER) to = msg.sender;
-        else if (to == ConstantValues.ADDRESS_THIS) to = address(this);
 
         liquidity = IApePair(pair).mint(to);
     }
