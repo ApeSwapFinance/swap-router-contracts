@@ -73,7 +73,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         int256 amount1Delta,
         bytes memory path
     ) external view override {
-        require(amount0Delta > 0 || amount1Delta > 0, "Both amount deltas are 0"); // swaps entirely within 0-liquidity regions are not supported
+        require(amount0Delta > 0 || amount1Delta > 0, 'Both amount deltas are 0'); // swaps entirely within 0-liquidity regions are not supported
         (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
 
         (bool isExactInput, uint256 amountReceived) =
@@ -183,17 +183,17 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         amountOut = getPairAmountOut(router, params.amountIn, params.tokenIn, params.tokenOut);
     }
 
-     /// @notice This function provides a quote for an exact input swap across multiple Uniswap V2 and/or V3 pools.
-     /// @dev The function will iterate over a given path of pools and calculate the output amount for a given input amount.
-     /// @param paths An array of encoded paths. Each encoded path represents a sequence of pools that the swap will traverse.
-     ///              For V2 pools, the fee should be encoded as 0x800000 (hex value of 8388608) between the two token addresses.
-     /// @param factoriesOrRouters An array of addresses representing Uniswap V2 Router or V3 Factory for each encoded path.
-     ///                        The index of each address should correspond to the index of the path in the `path` parameter.
-     /// @param amountIn The exact input amount of tokens to be swapped.
-     /// @return amountOut The amount of tokens received after the swap.
-     /// @return v3SqrtPriceX96AfterList An array of square root price values after each V3 swap. Only applicable for V3 swaps.
-     /// @return v3InitializedTicksCrossedList An array of tick values crossed during each V3 swap. Only applicable for V3 swaps.
-     /// @return v3SwapGasEstimate The estimated gas cost for the V3 swaps. This is a cumulative value for all V3 swaps in the path.
+    /// @notice This function provides a quote for an exact input swap across multiple Uniswap V2 and/or V3 pools.
+    /// @dev The function will iterate over a given path of pools and calculate the output amount for a given input amount.
+    /// @param paths An array of encoded paths. Each encoded path represents a sequence of pools that the swap will traverse.
+    ///              For V2 pools, the fee should be encoded as 0x800000 (hex value of 8388608) between the two token addresses.
+    /// @param factoriesOrRouters An array of addresses representing Uniswap V2 Router or V3 Factory for each encoded path.
+    ///                        The index of each address should correspond to the index of the path in the `path` parameter.
+    /// @param amountIn The exact input amount of tokens to be swapped.
+    /// @return amountOut The amount of tokens received after the swap.
+    /// @return v3SqrtPriceX96AfterList An array of square root price values after each V3 swap. Only applicable for V3 swaps.
+    /// @return v3InitializedTicksCrossedList An array of tick values crossed during each V3 swap. Only applicable for V3 swaps.
+    /// @return v3SwapGasEstimate The estimated gas cost for the V3 swaps. This is a cumulative value for all V3 swaps in the path.
     function quoteExactInput(
         bytes[] memory paths,
         address[] memory factoriesOrRouters,
@@ -225,7 +225,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
             currentPath = paths[pathIndex];
             while (true) {
                 (vars.tokenIn, vars.tokenOut, vars.fee) = currentPath.decodeFirstPool();
-                /// @dev Using bitwise AND operator to check the pool type. 
+                /// @dev Using bitwise AND operator to check the pool type.
                 ///  If the bitwise outcome is NOT 0, then the pool is a V2 pool.
                 if (vars.fee & flagBitmask != 0) {
                     vars.amountIn = quoteExactInputSingleV2(
