@@ -12,8 +12,8 @@ import './base/PeripheryPaymentsWithFeeExtended.sol';
 import './base/ContractWhitelist.sol';
 import './libraries/ConstantValues.sol';
 
-/// @title Uniswap V2 Swap Router
-/// @notice Router for stateless execution of swaps against Uniswap V2
+/// @title V2 Swap Router
+/// @notice Router for stateless execution of swaps against V2
 abstract contract V2SwapRouter is IV2SwapRouter, PeripheryPaymentsWithFeeExtended, ContractWhitelist {
     using LowGasSafeMath for uint256;
 

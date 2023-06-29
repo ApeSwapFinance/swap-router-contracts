@@ -63,7 +63,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         IUniswapV2Pair pair = IUniswapV2Pair(IApeFactory(router.factory()).getPair(tokenIn, tokenOut));
         (uint256 reserve0, uint256 reserve1, ) = pair.getReserves();
         (uint256 reserveInput, uint256 reserveOutput) =
-            tokenIn == tokenOut ? (reserve0, reserve1) : (reserve1, reserve0);
+            tokenIn < tokenOut ? (reserve0, reserve1) : (reserve1, reserve0);
         return router.getAmountOut(amountIn, reserveInput, reserveOutput);
     }
 
@@ -73,7 +73,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         int256 amount1Delta,
         bytes memory path
     ) external view override {
-        require(amount0Delta > 0 || amount1Delta > 0); // swaps entirely within 0-liquidity regions are not supported
+        require(amount0Delta > 0 || amount1Delta > 0, 'Both amount deltas are 0'); // swaps entirely within 0-liquidity regions are not supported
         (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
 
         (bool isExactInput, uint256 amountReceived) =
@@ -183,11 +183,20 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         amountOut = getPairAmountOut(router, params.amountIn, params.tokenIn, params.tokenOut);
     }
 
-    /// @dev Get the quote for an exactIn swap between an array of V2 and/or V3 pools
-    /// @notice To encode a V2 pair within the path, use 0x800000 (hex value of 8388608) for the fee between the two token addresses
+    /// @notice This function provides a quote for an exact input swap across multiple Uniswap V2 and/or V3 pools.
+    /// @dev The function will iterate over a given path of pools and calculate the output amount for a given input amount.
+    /// @param paths An array of encoded paths. Each encoded path represents a sequence of pools that the swap will traverse.
+    ///              For V2 pools, the fee should be encoded as 0x800000 (hex value of 8388608) between the two token addresses.
+    /// @param factoriesOrRouters An array of addresses representing Uniswap V2 Router or V3 Factory for each encoded path.
+    ///                        The index of each address should correspond to the index of the path in the `path` parameter.
+    /// @param amountIn The exact input amount of tokens to be swapped.
+    /// @return amountOut The amount of tokens received after the swap.
+    /// @return v3SqrtPriceX96AfterList An array of square root price values after each V3 swap. Only applicable for V3 swaps.
+    /// @return v3InitializedTicksCrossedList An array of tick values crossed during each V3 swap. Only applicable for V3 swaps.
+    /// @return v3SwapGasEstimate The estimated gas cost for the V3 swaps. This is a cumulative value for all V3 swaps in the path.
     function quoteExactInput(
-        bytes[] memory path,
-        address[] memory factoryOrRouter,
+        bytes[] memory paths,
+        address[] memory factoriesOrRouters,
         uint256 amountIn
     )
         public
@@ -203,8 +212,8 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         vars.amountIn = amountIn;
         uint256 poolCount = 0;
         uint256 i = 0;
-        for (i = 0; i < path.length; i++) {
-            poolCount += path[i].numPools();
+        for (i = 0; i < paths.length; i++) {
+            poolCount += paths[i].numPools();
         }
         v3SqrtPriceX96AfterList = new uint160[](poolCount);
         v3InitializedTicksCrossedList = new uint32[](poolCount);
@@ -212,18 +221,19 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         i = 0;
         uint256 pathIndex = 0;
         bytes memory currentPath;
-        while (pathIndex < path.length) {
-            currentPath = path[pathIndex];
+        while (pathIndex < paths.length) {
+            currentPath = paths[pathIndex];
             while (true) {
                 (vars.tokenIn, vars.tokenOut, vars.fee) = currentPath.decodeFirstPool();
-
+                /// @dev Using bitwise AND operator to check the pool type.
+                ///  If the bitwise outcome is NOT 0, then the pool is a V2 pool.
                 if (vars.fee & flagBitmask != 0) {
                     vars.amountIn = quoteExactInputSingleV2(
-                        IApeRouter02(factoryOrRouter[pathIndex]),
+                        IApeRouter02(factoriesOrRouters[pathIndex]),
                         QuoteExactInputSingleV2Params({
                             tokenIn: vars.tokenIn,
                             tokenOut: vars.tokenOut,
-                            amountIn: amountIn
+                            amountIn: vars.amountIn
                         })
                     );
                 } else {
@@ -235,7 +245,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
                         uint256 _gasEstimate
                     ) =
                         quoteExactInputSingleV3(
-                            IUniswapV3Factory(factoryOrRouter[pathIndex]),
+                            IUniswapV3Factory(factoriesOrRouters[pathIndex]),
                             QuoteExactInputSingleV3Params({
                                 tokenIn: vars.tokenIn,
                                 tokenOut: vars.tokenOut,

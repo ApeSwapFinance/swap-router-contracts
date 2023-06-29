@@ -28,6 +28,10 @@ abstract contract ContractWhitelist is IContractWhitelist, Ownable {
     }
 
     function _whitelistContracts(address[] memory _contracts, bytes32[] memory _init_code_hashes) private {
+        require(
+            _contracts.length == _init_code_hashes.length,
+            'Contracts and init_code_hashes need to have same length'
+        );
         for (uint256 i = 0; i < _contracts.length; i++) {
             hashes[_contracts[i]] = _init_code_hashes[i];
         }
